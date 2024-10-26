@@ -1,35 +1,32 @@
-import React, { useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import React from 'react';
+import { observer } from 'mobx-react-lite';
+import { useParams } from 'react-router-dom';
+import taskStore from './TaskStore';
 
-const TaskPage = () => {
+const TaskPage = observer(() => {
     const { id } = useParams<{ id: string }>();
-    const location = useLocation();
-    const { task } = location.state || { task: { name: 'Task not found' } };
-    const [taskTexts, setTaskTexts] = useState<{ [key: string]: string }>({});
+    const task = taskStore.getTaskById(Number(id));
 
-    const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { value } = event.target;
-        if (id) {
-            setTaskTexts((prev) => ({
-                ...prev,
-                [id]: value,
-            }));
-        }
+    if (!task) {
+        return <div>Task not found</div>;
+    }
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        taskStore.updateTaskText(id || '', e.target.value);
     };
 
     return (
-        <div className="task-page w-full items-center d-flex justify-center">
-            <h1 className="text-white text-[34px] text-center ">{task.name}</h1>
+        <div className="task-page">
+            <h1>{task.name}</h1>
             <textarea
-                className="text-black text-xl items-center d-flex justify-center w-[90%]  ml-10 "
-                value={id ? taskTexts[id] || '' : ''}
+                value={taskStore.taskTexts[id || ''] || ''}
                 onChange={handleTextChange}
                 placeholder="Enter your text here..."
                 rows={10}
-                cols={100}
+                cols={50}
             />
         </div>
     );
-};
+});
 
 export default TaskPage;
