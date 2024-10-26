@@ -7,7 +7,7 @@ interface Task {
     isCompleted: boolean;
 }
 
-const TaskList = ({ listName }: { listName: string }) => {
+const TaskList2 = ({ listName }: { listName: string }) => {
     const [title, setTitle] = useState('');
     const [tasks, setTasks] = useState<Task[]>([]);
     const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
@@ -84,11 +84,11 @@ const TaskList = ({ listName }: { listName: string }) => {
                 {tasks.map((task) => (
                     <li
                         key={task.id}
-                        className="list-group-item w-full border-blue-200 bg-green-50  hover:bg-[#818132]/90  d-flex items-center justify-between bg-[#48694b] p-5  my-3"
+                        className="list-group-item w-full hover:bg-[#818132] d-flex items-center justify-between bg-[#48694b] p-5 my-3"
                         onClick={() => handleTaskClick(task)}
                     >
                         {editingTaskId === task.id ? (
-                            <div className="d-flex items-center justify-center w-full">
+                            <>
                                 <input
                                     type="text"
                                     value={newName}
@@ -106,7 +106,7 @@ const TaskList = ({ listName }: { listName: string }) => {
                                 >
                                     Cancel
                                 </button>
-                            </div>
+                            </>
                         ) : (
                             <span
                                 className={
@@ -148,4 +148,4 @@ const TaskList = ({ listName }: { listName: string }) => {
     );
 };
 
-export default TaskList;
+export default TaskList2;

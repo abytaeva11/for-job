@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
-const TaskPage = () => {
+const TaskPage2 = () => {
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
     const { task } = location.state || { task: { name: 'Task not found' } };
@@ -32,4 +32,4 @@ const TaskPage = () => {
     );
 };
 
-export default TaskPage;
+export default TaskPage2;

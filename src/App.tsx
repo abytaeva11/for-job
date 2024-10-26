@@ -1,7 +1,8 @@
 import "./index.scss";
 import { Route, Routes, useLocation } from "react-router-dom";
-import TaskPage from "src/Tasks/TaskPage";
-import Accordion from "src/Tasks/Accordion";
+import Accordion2 from "src/Tasks2/Accordion";
+import TaskPage2 from "src/Tasks2/TaskPage";
+
 
 function App() {
     const location = useLocation();
@@ -11,15 +12,18 @@ function App() {
         <div className="container">
             <div className="body">
                 <div className="task">
-                    <Accordion />
+                    <Accordion2 />
                 </div>
-                {isTaskPage && (
-                    <div className="block">
-                        <Routes>
-                            <Route path="/task/:id" element={<TaskPage />} />
-                        </Routes>
-                    </div>
-                )}
+                <div className="block">
+                    {isTaskPage && (
+                        <div >
+                            <Routes>
+                                <Route path="/task/:id" element={<TaskPage2 />} />
+                            </Routes>
+                        </div>
+                    )}
+                </div>
+
             </div>
         </div>
     );

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import TaskList from './TaskList';
+// src/Tasks2/Accordion.tsx
+import React from 'react';
+import { observer } from 'mobx-react-lite';
+import TaskList from "src/Tasks2/TaskList";
 
-const Accordion = () => {
-    const [isOpen, setIsOpen] = useState<number | null>(null);
-    const [taskLists, setTaskLists] = useState<string[]>(['Задача 1', 'Задача 2', 'Задача 3', 'Задача 4', 'Задача 5']);
+const Accordion2 = observer(() => {
+    const [isOpen, setIsOpen] = React.useState<number | null>(null);
+    const taskLists = ['Задача 1', 'Задача 2', 'Задача 3', 'Задача 4', 'Задача 5'];
 
     const toggleAccordion = (index: number) => {
         setIsOpen(isOpen === index ? null : index);
@@ -34,6 +36,6 @@ const Accordion = () => {
             ))}
         </div>
     );
-};
+});
 
-export default Accordion;
+export default Accordion2;
