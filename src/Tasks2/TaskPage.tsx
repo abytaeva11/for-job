@@ -1,3 +1,4 @@
+// TaskPage2.tsx
 import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -21,7 +22,7 @@ const TaskPage2 = () => {
         <div className="task-page w-full items-center d-flex justify-center">
             <h1 className="text-white text-[34px] text-center ">{task.name}</h1>
             <textarea
-                className="text-black text-xl items-center d-flex justify-center w-[90%]  ml-10 "
+                className="text-black text-xl items-center d-flex justify-center w-[90%] ml-10"
                 value={id ? taskTexts[id] || '' : ''}
                 onChange={handleTextChange}
                 placeholder="Enter your text here..."

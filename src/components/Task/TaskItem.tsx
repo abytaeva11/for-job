@@ -32,10 +32,11 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, deleteTask,changeStatus }) =>
 
 
     return (
-        <li className="list-group-item d-flex items-center justify-between">
+        <li className="list-group-item  d-flex items-center justify-between">
             {isEdit ? (
                 <>
                     <input
+
                         type="text"
                         value={newName}
                         onChange={handleEditChange}
@@ -45,7 +46,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, deleteTask,changeStatus }) =>
             ) : (
                 <span className={task.isCompleted ? "line-through" : ""}>{task.name}</span>
             )}
-            <div className="d-flex">
+            <div className="d-flex ">
                 <input  onChange={()=>changeStatus(task.id)} defaultChecked={task.isCompleted} type="checkbox"/>
                 <button
                     onClick={() => setIsEdit(!isEdit)}

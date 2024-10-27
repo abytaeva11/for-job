@@ -1,17 +1,18 @@
+// TaskList2.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import TaskItem from './TaskItem';
 
 interface Task {
     id: number;
     name: string;
     isCompleted: boolean;
+    subtasks: Task[];
 }
 
 const TaskList2 = ({ listName }: { listName: string }) => {
     const [title, setTitle] = useState('');
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
-    const [newName, setNewName] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,6 +26,7 @@ const TaskList2 = ({ listName }: { listName: string }) => {
             id: tasks.length ? tasks[tasks.length - 1].id + 1 : 1,
             name: title,
             isCompleted: false,
+            subtasks: [],
         };
 
         setTasks([...tasks, newTask]);
@@ -43,25 +45,63 @@ const TaskList2 = ({ listName }: { listName: string }) => {
         );
     };
 
-    const startEdit = (taskId: number, currentName: string) => {
-        setEditingTaskId(taskId);
-        setNewName(currentName);
-    };
+    const addSubtask = (parentTaskId: number, subtaskName: string) => {
+        if (!subtaskName.trim()) return;
 
-    const saveEdit = () => {
-        if (!newName.trim() || editingTaskId === null) return;
-        setTasks((prev) =>
-            prev.map((task) =>
-                task.id === editingTaskId ? { ...task, name: newName } : task
+        setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+                task.id === parentTaskId
+                    ? {
+                        ...task,
+                        subtasks: [
+                            ...task.subtasks,
+                            {
+                                id: task.subtasks.length
+                                    ? task.subtasks[task.subtasks.length - 1].id + 1
+                                    : 1,
+                                name: subtaskName,
+                                isCompleted: false,
+                                subtasks: [],
+                            },
+                        ],
+                    }
+                    : task
             )
         );
-        setEditingTaskId(null);
-        setNewName('');
     };
 
-    const cancelEdit = () => {
-        setEditingTaskId(null);
-        setNewName('');
+    const deleteSubtask = (parentTaskId: number, subtaskId: number) => {
+        setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+                task.id === parentTaskId
+                    ? {
+                        ...task,
+                        subtasks: task.subtasks.filter(
+                            (subtask) => subtask.id !== subtaskId
+                        ),
+                    }
+                    : task
+            )
+        );
+    };
+
+    const editSubtask = (parentTaskId: number, subtaskId: number, newName: string) => {
+        if (!newName.trim()) return;
+
+        setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+                task.id === parentTaskId
+                    ? {
+                        ...task,
+                        subtasks: task.subtasks.map((subtask) =>
+                            subtask.id === subtaskId
+                                ? { ...subtask, name: newName }
+                                : subtask
+                        ),
+                    }
+                    : task
+            )
+        );
     };
 
     const handleTaskClick = (task: Task) => {
@@ -82,66 +122,16 @@ const TaskList2 = ({ listName }: { listName: string }) => {
             </button>
             <ul>
                 {tasks.map((task) => (
-                    <li
+                    <TaskItem
                         key={task.id}
-                        className="list-group-item w-full hover:bg-[#818132] d-flex items-center justify-between bg-[#48694b] p-5 my-3"
-                        onClick={() => handleTaskClick(task)}
-                    >
-                        {editingTaskId === task.id ? (
-                            <>
-                                <input
-                                    type="text"
-                                    value={newName}
-                                    onChange={(e) => setNewName(e.target.value)}
-                                />
-                                <button
-                                    onClick={saveEdit}
-                                    className="btn bg-[#deef3e] mx-2"
-                                >
-                                    Save
-                                </button>
-                                <button
-                                    onClick={cancelEdit}
-                                    className="btn bg-[#deef3e] mx-2"
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        ) : (
-                            <span
-                                className={
-                                    task.isCompleted ? 'line-through' : ''
-                                }
-                            >
-                                {task.name}
-                            </span>
-                        )}
-                        <div className="d-flex">
-                            <input
-                                type="checkbox"
-                                checked={task.isCompleted}
-                                onChange={() => changeStatus(task.id)}
-                            />
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    startEdit(task.id, task.name);
-                                }}
-                                className="btn bg-[#deef3e] mx-2"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteTask(task.id);
-                                }}
-                                className="btn bg-[#cb0707]"
-                            >
-                                &times;
-                            </button>
-                        </div>
-                    </li>
+                        task={task}
+                        onTaskClick={() => handleTaskClick(task)}
+                        onDeleteTask={deleteTask}
+                        onToggleComplete={changeStatus}
+                        onAddSubtask={addSubtask}
+                        onDeleteSubtask={deleteSubtask}
+                        onEditSubtask={editSubtask}
+                    />
                 ))}
             </ul>
         </div>
