@@ -42,7 +42,7 @@ const TaskItem = ({
     };
 
     return (
-        <li className="task-item bg-[#818132] hover:bg-green-200 m-3" onClick={onTaskClick}>
+        <li className="task-item  bg-[#818132] hover:bg-green-200 m-3" onClick={onTaskClick}>
             {isEditing ? (
                 <input
                     className="border-blue-200 border-r-[10px]"
@@ -55,10 +55,16 @@ const TaskItem = ({
                     {task.name}
                 </span>
             )}
-            <div>
-                <button  className="btn bg-[#cb0707]" onClick={(e) => { e.stopPropagation(); onToggleComplete(task.id); }}>
-                    {task.isCompleted ? 'Undo' : 'Complete'}
-                </button>
+            <div className="bg-blue-200 p-5">
+                <input
+                    type="checkbox"
+                    checked={task.isCompleted}
+                    onChange={(e) => {
+                        e.stopPropagation();
+                        onToggleComplete(task.id);
+                    }}
+                />
+                <label>{task.isCompleted ? 'Completed' : 'Not Completed'}</label>
                 <button className=" btn bg-[#cb0707]" onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}>
                     {isEditing ? 'Save' : 'Edit'}
                 </button>
@@ -66,7 +72,7 @@ const TaskItem = ({
                     &times;
                 </button>
             </div>
-            <div className="add-subtask">
+            <div className="add-subtask bg-blue-200">
                 <input
                     type="text"
                     value={newSubtaskName}
